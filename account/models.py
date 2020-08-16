@@ -27,6 +27,22 @@ class Account(models.Model):
 	def __str__(self):
 		return self.user.__str__()
 
+	@classmethod
+	def for_request(cls, request):
+		user = getattr(request, "user", None)
+		if user and user.is_authenticated:
+			try:
+				return Account.objects.get(user=user)
+			except Account.DoesNotExist:
+				return cls.create()
+
+	@classmethod
+	def create(cls, **kwargs):
+		account = cls(**kwargs)
+		if account.user.email:
+			EmailAddress.object.add_email(account.user, account.user.email)
+		return account
+
 
 class EmailAddress(models.Model):
 	user = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name=_("user"))
@@ -82,15 +98,6 @@ class EmailAddressConfirmation(models.Model):
 
 	def __str__(self):
 		return self.email.__str__()
-
-	@classmethod
-	def for_request(cls, request):
-		user = getattr(request, "user", None)
-		if user and user.is_authenticated:
-			try:
-				return Account.objects.get(user=user)
-			except Account.DoesNotExist:
-				return cls.create(user.email)
 
 	@classmethod
 	def create(cls, email):
