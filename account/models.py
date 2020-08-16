@@ -8,8 +8,7 @@ from django.utils import timezone
 from datetime import timedelta
 import secrets
 from account import signals
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
+from eventlog.utils import EmailMessage
 
 
 # Create your models here.
@@ -26,12 +25,12 @@ class Account(models.Model):
 		ordering = ["-user"]
 
 	def __str__(self):
-		return self.user
+		return self.user.__str__()
 
 
 class EmailAddress(models.Model):
 	user = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name=_("user"))
-	email = models.EmailField(max_length=254, unique=True)
+	email = models.EmailField(max_length=254, unique=True, verbose_name=_("email"))
 	verified = models.BooleanField(default=False, verbose_name=_("verified"))
 	primary = models.BooleanField(default=False, verbose_name=_("primary"))
 
@@ -42,7 +41,7 @@ class EmailAddress(models.Model):
 		verbose_name_plural = _("email addresses")
 
 	def __str__(self):
-		return "{0}:{1}".format(self.email, self.user)
+		return "{0} [{1}]".format(self.email, self.user.__str__())
 
 	def set_primary(self):
 		old_primary = EmailAddress.object.get(self.user)
@@ -75,16 +74,23 @@ class EmailAddressConfirmation(models.Model):
 	email = models.ForeignKey(to=EmailAddress, on_delete=models.CASCADE, verbose_name=_("email"))
 	created_at = models.DateTimeField(default=timezone.now, verbose_name=_("created at"))
 	sent_at = models.DateTimeField(null=True, verbose_name=_("sent_at"))
-	token = models.CharField(max_length=64, unique=True, verbose_name=_("token"))
-
-	# token_expired = models.BooleanField(default=False, verbose_name=_("token expired"))
+	token = models.CharField(max_length=64, unique=True, verbose_name=_("token"), default=secrets.token_urlsafe(32))
 
 	class Meta:
 		verbose_name = _("email address confirmation")
 		verbose_name_plural = _("email address confirmations")
 
 	def __str__(self):
-		return self.email
+		return self.email.__str__()
+
+	@classmethod
+	def for_request(cls, request):
+		user = getattr(request, "user", None)
+		if user and user.is_authenticated:
+			try:
+				return Account.objects.get(user=user)
+			except Account.DoesNotExist:
+				return cls.create(user.email)
 
 	@classmethod
 	def create(cls, email):
@@ -117,4 +123,9 @@ class EmailAddressConfirmation(models.Model):
 		self.save()
 		signals.email_confirmation_sent.send(sender=self.__class__, confirmation=self)
 
-	def send_confirmation_email(self, to, context):
+	@staticmethod
+	def send_confirmation_email(to, context):
+		EmailMessage().send(
+			subject_template="account/email/email_confirmation_subject.html", subject_context=context,
+			message_template="account/email/email_confirmation_message.html", message_context=context,
+			from_email=settings.DEFAULT_FROM_EMAIL, to=to)
