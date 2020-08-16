@@ -16,7 +16,7 @@ from eventlog.utils import EmailMessage
 
 # Create your models here.
 class InviteCode(models.Model):
-	code = models.CharField(max_length=64, unique=True, verbose_name=_("code"), default=secrets.token_urlsafe(8))
+	code = models.CharField(max_length=64, unique=True, verbose_name=_("code"))
 	expiry = models.DateTimeField(null=True, blank=True, verbose_name=_("expiry"))
 	invite_from = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name=_("invite from"))
 	email = models.EmailField(verbose_name=_("email"))

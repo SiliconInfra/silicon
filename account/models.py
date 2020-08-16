@@ -1,13 +1,15 @@
-from django.db import models, transaction
-from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
-from django.conf import settings
-from djmoney.models.fields import MoneyField
-from account.managers import EmailAddressManager
-from django.utils import timezone
-from datetime import timedelta
 import secrets
+from datetime import timedelta
+
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.db import models, transaction
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from djmoney.models.fields import MoneyField
+
 from account import signals
+from account.managers import EmailAddressManager
 from eventlog.utils import EmailMessage
 
 
@@ -90,7 +92,7 @@ class EmailAddressConfirmation(models.Model):
 	email = models.OneToOneField(to=EmailAddress, on_delete=models.CASCADE, verbose_name=_("email"))
 	created_at = models.DateTimeField(default=timezone.now, verbose_name=_("created at"))
 	sent_at = models.DateTimeField(null=True, verbose_name=_("sent_at"))
-	token = models.CharField(max_length=64, unique=True, verbose_name=_("token"), default=secrets.token_urlsafe(32))
+	token = models.CharField(max_length=64, unique=True, verbose_name=_("token"))
 
 	class Meta:
 		verbose_name = _("email address confirmation")
