@@ -39,7 +39,7 @@ INSTALLED_APPS = [
 	'djmoney',
 	'account',
 	'eventlog',
-	'invite'
+	'invite',
 ]
 
 MIDDLEWARE = [
