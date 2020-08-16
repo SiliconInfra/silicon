@@ -87,7 +87,7 @@ class EmailAddress(models.Model):
 
 
 class EmailAddressConfirmation(models.Model):
-	email = models.ForeignKey(to=EmailAddress, on_delete=models.CASCADE, verbose_name=_("email"))
+	email = models.OneToOneField(to=EmailAddress, on_delete=models.CASCADE, verbose_name=_("email"))
 	created_at = models.DateTimeField(default=timezone.now, verbose_name=_("created at"))
 	sent_at = models.DateTimeField(null=True, verbose_name=_("sent_at"))
 	token = models.CharField(max_length=64, unique=True, verbose_name=_("token"), default=secrets.token_urlsafe(32))
