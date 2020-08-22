@@ -14,6 +14,7 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(Membership)
 class MembershipAdmin(admin.ModelAdmin):
-	list_display = ["team", "user", "invite", "state", "role", "created_at"]
+	readonly_fields = ["created_at"]
+	list_display = ["user", "team", "invite", "state", "role", "created_at"]
 	list_filter = ["created_at", "role", "state"]
 	search_fields = ["team__name", "user__username", "user__email"]
