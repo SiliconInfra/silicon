@@ -7,7 +7,7 @@ from team.models import Membership, Team
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
 	readonly_fields = ["slug"]
-	list_display = ["name", "slug", "parent", "owner", "member_access", "manager_access", "created_at"]
+	list_display = ["name", "slug", "parent", "tenant", "owner", "member_access", "manager_access", "created_at"]
 	list_filter = ["created_at"]
 	search_fields = ["name", "owner__username", "owner__email"]
 

@@ -41,8 +41,6 @@ class Team(MPTTModel):
 	member_access = models.CharField(choices=MEMBER_ACCESS_CHOICES, max_length=20, verbose_name=_("member access"))
 	manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES, verbose_name=_("manager access"))
 	parent = TreeForeignKey(to="self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
-	tenant_group = models.ForeignKey(to=TenantGroup, on_delete=models.CASCADE, blank=True,
-	                                 verbose_name=_("tenant group"))
 	tenant = models.ForeignKey(to=Tenant, on_delete=models.CASCADE, blank=True, verbose_name=_("tenant"))
 	created_at = models.DateTimeField(default=timezone.now, verbose_name=_("created at"))
 
@@ -96,6 +94,9 @@ class Team(MPTTModel):
 		while getattr(team, "parent"):
 			team = team.parent
 		return team
+
+	def get_tenant_group(self):
+		return self.tenant.group
 
 	@property
 	def ancestors(self):
