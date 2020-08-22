@@ -8,6 +8,7 @@ from tenant.models import Tenant, TenantGroup
 class TenantGroupAdmin(admin.ModelAdmin):
 	list_display = ["name", "parent", "created_at"]
 	list_filter = ["created_at"]
+	readonly_fields = ["slug"]
 	search_fields = ["name", "parent__name", "slug"]
 
 
@@ -15,4 +16,5 @@ class TenantGroupAdmin(admin.ModelAdmin):
 class TenantAdmin(admin.ModelAdmin):
 	list_display = ["name", "group", "created_at"]
 	list_filter = ["created_at"]
+	readonly_fields = ["slug"]
 	search_fields = ["name", "group__name", "slug"]
