@@ -22,6 +22,7 @@
       <sourceFolder url="file://$MODULE_DIR$/billing" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/notifications" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/datacenter" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tenant" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>

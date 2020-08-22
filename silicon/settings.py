@@ -41,7 +41,8 @@ INSTALLED_APPS = [
 	'eventlog',
 	'invite',
 	'team',
-	'datacenter'
+	'datacenter',
+	'tenant'
 ]
 
 MIDDLEWARE = [
