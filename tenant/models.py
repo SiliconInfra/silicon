@@ -9,7 +9,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 class TenantGroup(MPTTModel):
 	name = models.CharField(max_length=100, unique=True, verbose_name=_("name"))
 	slug = models.SlugField(unique=True, verbose_name=_("slug"))
-	parent = TreeForeignKey(to='self', on_delete=models.CASCADE, related_name='children', blank=True, null=True,
+	parent = TreeForeignKey(to="self", on_delete=models.CASCADE, related_name='children', blank=True, null=True,
 	                        db_index=True, verbose_name=_("parent"))
 	description = models.CharField(max_length=100, blank=True, verbose_name=_("description"))
 	created_at = models.DateTimeField(default=timezone.now, verbose_name=_("created at"))

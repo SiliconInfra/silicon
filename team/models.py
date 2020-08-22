@@ -5,13 +5,16 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from mptt.managers import TreeManager
+from mptt.models import MPTTModel, TreeForeignKey
 from slugify import slugify
 
 from invite.models import JoinInvitation
+from tenant.models import Tenant, TenantGroup
 
 
 # Create your models here.
-class Team(models.Model):
+class Team(MPTTModel):
 	MEMBER_ACCESS_OPEN = "open"
 	MEMBER_ACCESS_APPLICATION = "application"
 	MEMBER_ACCESS_INVITATION = "invitation"
@@ -37,12 +40,20 @@ class Team(models.Model):
 	owner = models.ForeignKey(to=User, verbose_name=_("owner"), on_delete=models.CASCADE, related_name="owner")
 	member_access = models.CharField(choices=MEMBER_ACCESS_CHOICES, max_length=20, verbose_name=_("member access"))
 	manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES, verbose_name=_("manager access"))
-	parent = models.ForeignKey(to="self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
+	parent = TreeForeignKey(to="self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
+	tenant_group = models.ForeignKey(to=TenantGroup, on_delete=models.CASCADE, blank=True,
+	                                 verbose_name=_("tenant group"))
+	tenant = models.ForeignKey(to=Tenant, on_delete=models.CASCADE, blank=True, verbose_name=_("tenant"))
 	created_at = models.DateTimeField(default=timezone.now, verbose_name=_("created at"))
+
+	objects = TreeManager()
 
 	class Meta:
 		verbose_name = _("team")
 		verbose_name_plural = _("teams")
+
+	class MPTTMeta:
+		order_insertion_by = ["name"]
 
 	def __str__(self):
 		return self.name
