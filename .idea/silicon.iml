@@ -23,6 +23,7 @@
       <sourceFolder url="file://$MODULE_DIR$/datacenter" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tenant" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/inventory" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ipam" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>

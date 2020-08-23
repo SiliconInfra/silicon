@@ -45,7 +45,8 @@ INSTALLED_APPS = [
 	'team',
 	'datacenter',
 	'tenant',
-	'inventory'
+	'inventory',
+	'ipam'
 ]
 
 MIDDLEWARE = [
