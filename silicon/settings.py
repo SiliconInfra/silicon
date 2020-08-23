@@ -36,16 +36,20 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'django.contrib.sites',
+	'django_prometheus',
 	'djmoney',
+	'colorfield',
 	'account',
 	'eventlog',
 	'invite',
 	'team',
 	'datacenter',
-	'tenant'
+	'tenant',
+	'inventory'
 ]
 
 MIDDLEWARE = [
+	'django_prometheus.middleware.PrometheusBeforeMiddleware',
 	'django.middleware.security.SecurityMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
@@ -53,6 +57,7 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django_prometheus.middleware.PrometheusAfterMiddleware'
 ]
 
 ROOT_URLCONF = 'silicon.urls'
@@ -81,7 +86,7 @@ WSGI_APPLICATION = 'silicon.wsgi.application'
 
 DATABASES = {
 	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
+		'ENGINE': 'django_prometheus.db.backends.sqlite3',
 		'NAME': BASE_DIR / 'db.sqlite3',
 	}
 }
